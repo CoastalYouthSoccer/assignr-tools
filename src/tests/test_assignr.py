@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest import TestCase
 from unittest.mock import (patch, MagicMock)
 from assignr.assignr import (Assignr, get_game_information)
@@ -6,6 +7,7 @@ ACCESS_TOKEN = "ACCESS_TOKEN"
 BASE_URL = "https://base.com"
 AUTH_URL = "https://auth.com"
 ASSIGNR_REQUESTS ="assignr.assignr.requests"
+CONST_DATE_2022_01_01 = datetime(2022,1,1,0,0,0,0)
 
 mock_auth_response = MagicMock()
 mock_auth_response.status_code = 200
@@ -239,6 +241,88 @@ class TestAssignr(TestCase):
         self.assertEqual(cm.output, ["ERROR:root:Failed to get referee information: 500"])
         self.assertEqual(result, {})
 
+    def test_get_referees_by_availability(self):
+        expected_result = [
+            {
+                'accepted': 'false',
+                'position': 'Referee',
+                'first_name': None,
+                'last_name': None
+            }, {
+                'accepted': 'false',
+                'position': 'Referee',
+                'first_name': 'Mickey',
+                'last_name': 'Mouse'
+            }, {
+                'accepted': 'true',
+                'position': 'Scorekeeper',
+                'first_name': 'Homer',
+                'last_name': 'Simpson'
+            }
+        ]
+        payload = [
+        {
+            "id": 63558183,
+            "position_id": 78498,
+            "position": "Referee",
+            "position_abbreviation": "R",
+            "accepted": "false",
+            "declined": "false",
+            "assigned": "false",
+            "sort_order": 1,
+            "lock_version": 2,
+            "created": "2024-01-03T22:51:20.000-05:00",
+            "updated": "2024-01-04T12:45:56.000-05:00"
+        },
+        {
+            "id": 63558186,
+            "position_id": 78498,
+            "position": "Referee",
+            "position_abbreviation": "R",
+            "accepted": "false",
+            "declined": "false",
+            "assigned": "true",
+            "sort_order": 2,
+            "lock_version": 1,
+            "created": "2024-01-03T22:51:20.000-05:00",
+            "updated": "2024-01-04T12:44:16.000-05:00",
+            "_embedded": {
+                "official": {
+                    "id": 12656,
+                    "last_name": "Mouse",
+                    "first_name": "Mickey",
+                    "created": "2023-11-07T20:49:27.000-05:00",
+                    "updated": "2024-02-18T11:58:02.000-05:00"
+                }
+            }
+        },
+        {
+            "id": 63558189,
+            "position_id": 83433,
+            "position": "Scorekeeper",
+            "position_abbreviation": "S",
+            "accepted": "true",
+            "declined": "false",
+            "assigned": "true",
+            "sort_order": 3,
+            "lock_version": 1,
+            "created": "2024-01-03T22:51:20.000-05:00",
+            "updated": "2024-01-04T12:40:58.000-05:00",
+            "_embedded": {
+                "official": {
+                    "id": 12761,
+                    "last_name": "Simpson",
+                    "first_name": "Homer",
+                    "created": "2023-10-05T18:41:33.000-04:00",
+                    "updated": "2024-02-15T20:16:55.000-05:00"
+                }
+            }
+        }]
+        temp = Assignr('123', '234', '345', BASE_URL,
+                       AUTH_URL)
+        referees = temp.get_referees_by_assignments(payload)
+        self.assertEqual(referees, expected_result)
+
 #    def test_get_referees(self):
 #        payload = [{
 #            'id': 12345, 'no_show': False,
@@ -309,7 +393,8 @@ class TestAssignr(TestCase):
                        AUTH_URL)
         temp.site_id = 100
         with self.assertLogs(level='INFO') as cm:
-            result = temp.get_misconducts('01/01/2022', '01/01/2022')
+            result = temp.get_misconducts(CONST_DATE_2022_01_01,
+                                          CONST_DATE_2022_01_01)
         self.assertEqual(cm.output, ["ERROR:root:Failed to get misconducts: 500"])
         self.assertEqual(result, [])
 
