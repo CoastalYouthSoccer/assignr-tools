@@ -374,6 +374,9 @@ def process_game_report(data):
         result = {
             "admin_review": set_boolean_value(data[ADMIN_REVIEW]),
             "misconduct": set_boolean_value(data['.misconductCheckbox']),
+            "team_rosters": set_boolean_value(data['.teamRostersWereValid']),
+            "lanyards": set_boolean_value(data['.didTheCoachEsWearTheirLanyards']),
+            "borrowed_players": set_boolean_value(data['.teamsUsedBorrowedPlayers']),
             'assignments_correct': set_boolean_value(data['.assignmentsCorrect']),
             'home_team_score': data['.homeTeamScore'],
             'away_team_score': data['.awayTeamScore'],
