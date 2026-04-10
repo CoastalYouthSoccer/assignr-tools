@@ -92,18 +92,20 @@ def send_email(email_vars, subject, message, send_to):
     return email_client.send_email(subject, message,
                                    send_to, True)
 
-def process_administrator(email_vars, reports, start_date, end_date,
-                          assignor_emails):
+def process_administrator(email_vars, start_date, end_date, admin_reports,
+                          team_rosters, lanyards, borrowed_players):
     subject = f'Administrator Game Reports: {start_date.strftime("%m/%d/%Y")}' \
              f' - {end_date.strftime("%m/%d/%Y")}'
     temp_addresses = [email_vars[constants.ADMIN_EMAIL]]
-    temp_addresses.extend(assignor_emails)
     email_addresses = ','.join(temp_addresses) 
 
     content = {
         START_DATE: start_date,
         END_DATE: end_date,
-        'reports': reports
+        'admin_reports': admin_reports,
+        'team_rosters': team_rosters,
+        'lanyards': lanyards,
+        'borrowed_players': borrowed_players
     }
 
     message = create_message(content, 'administrator.html.jinja')
@@ -206,9 +208,9 @@ def main():
     process_misconducts(email_vars, reports['misconducts'],
                         args[START_DATE], args[END_DATE],
                         assignor_emails)
-    process_administrator(email_vars, reports['admin_reports'],
-                        args[START_DATE], args[END_DATE],
-                        assignor_emails)
+    process_administrator(email_vars, args[START_DATE], args[END_DATE],
+                          reports['admin_reports'], reports['team_rosters'],
+                          reports['lanyards'], reports['borrowed_players'])
     process_assignor_reports(email_vars, reports['assignor_reports'],
                              args[START_DATE], args[END_DATE],
                              assignors)

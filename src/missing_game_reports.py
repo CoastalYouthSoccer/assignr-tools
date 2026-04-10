@@ -106,7 +106,7 @@ def send_referee_reminder(game, email_vars, subject):
     if response:
         logger.error(response)
     else:
-        logger.info(f'Sent an email to {game['league']}')
+        logger.info(f"Sent an email to {game['league']}")
 
 def main():
     logger.info("Starting Missing Game Report")
