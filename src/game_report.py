@@ -205,15 +205,15 @@ def main():
                                     args[END_DATE],
                                     assignors,
                                     coaches)
-#    process_misconducts(email_vars, reports['misconducts'],
-#                        args[START_DATE], args[END_DATE],
-#                        assignor_emails)
+    process_misconducts(email_vars, reports['misconducts'],
+                        args[START_DATE], args[END_DATE],
+                        assignor_emails)
     process_administrator(email_vars, args[START_DATE], args[END_DATE],
                           reports['admin_reports'], reports['team_rosters'],
                           reports['lanyards'], reports['borrowed_players'])
-#    process_assignor_reports(email_vars, reports['assignor_reports'],
-#                             args[START_DATE], args[END_DATE],
-#                             assignors)
+    process_assignor_reports(email_vars, reports['assignor_reports'],
+                             args[START_DATE], args[END_DATE],
+                             assignors)
     logger.info("Completes Game Report")
 
 if __name__ == "__main__":

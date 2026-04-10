@@ -182,13 +182,19 @@ class Assignr:
         misconducts = []
         admin_reports = []
         assignor_reports = []
+        team_rosters = []
+        lanyards = []
+        borrowed_players = []
         page_nbr = 1
         more_rows = True
 
         reports = {
             "misconducts": misconducts,
             "admin_reports": admin_reports,
-            'assignor_reports': assignor_reports
+            'assignor_reports': assignor_reports,
+            'team_rosters': team_rosters,
+            'lanyards': lanyards,
+            'borrowed_players': borrowed_players
         }
 
         if self.site_id is None:
@@ -224,6 +230,12 @@ class Assignr:
                                                             result['gender'], result['away_team'])
                     if result['admin_review']:
                         reports['admin_reports'].append(result)
+                    if not result['team_rosters']:
+                        reports['team_rosters'].append(result)
+                    if not result['lanyards']:
+                        reports['lanyards'].append(result)
+                    if result['borrowed_players']:
+                        reports['borrowed_players'].append(result)
                     if result['misconduct']:
                         result['assignors'] = assignors[result['league']]
                         reports['misconducts'].append(result)
